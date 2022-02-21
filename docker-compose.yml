@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  app: 
+  build: .
+  container_name: 'api'
+  command: sh -c 'npm run start'
+  ports: 
+   - 3333:3333
+  volumes:
+   - .:/home/api 
+  links: 
+   - db
+  depends_on:
+   - db
+  environment:
+      - DB_HOST=localhost
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - DB_NAME=database
+
+  db:
+    image: postgres
+    container_name: node-api
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=database
+    volumes:
+      - pgdata:/data/postgres
+
+    networks:
+      overlay:  
+
+volumes:
+  pgdata:
+    driver: local
+
+  
